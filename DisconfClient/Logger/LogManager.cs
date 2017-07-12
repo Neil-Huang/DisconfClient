@@ -17,8 +17,8 @@ namespace DisconfClient
             string typeName = DisconfClientSettings.Logger;
             if (string.IsNullOrWhiteSpace(typeName))
             {
-                _logger = new YmatouLogAdapter();
-                //_logger = new ConsoleLogAdapter();
+                //_logger = new YmatouLogAdapter();
+                _logger = new ConsoleLogAdapter();
             }
             else
             {

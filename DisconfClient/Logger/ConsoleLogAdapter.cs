@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace DisconfClient
+namespace DisconfClient.Logger
 {
     public class ConsoleLogAdapter : ILogger
     {

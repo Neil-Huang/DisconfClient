@@ -36,10 +36,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DisconfClient, Version=1.0.0.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\DisconfClient.1.0.0.8\lib\net40\DisconfClient.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
       <Private>True</Private>
@@ -55,14 +51,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Ymatou.Log, Version=1.1.0.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ymatou.Log.1.1.0.7\lib\net40\Ymatou.Log.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ZooKeeperNet, Version=2.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ZooKeeperNet.2.0.0.1\lib\net40\ZooKeeperNet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigClass\AppSettingsDemoConfig.cs" />
@@ -77,12 +65,17 @@
     <None Include="Config\Log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ApplicationLog - Copy.txt" />
     <Content Include="nuget\NuGet.exe" />
     <Content Include="nuget\NuGetPackageUploader.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DisconfClient\DisconfClient.csproj">
+      <Project>{98fb9cc4-409b-4f59-bddc-43bdc1a69b39}</Project>
+      <Name>DisconfClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

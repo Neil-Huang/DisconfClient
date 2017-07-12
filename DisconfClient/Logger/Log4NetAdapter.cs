@@ -1,7 +1,7 @@
 ﻿using System;
 using log4net;
 
-namespace DisconfClient
+namespace DisconfClient.Logger
 {
     public class Log4NetAdapter : ILogger
     {
