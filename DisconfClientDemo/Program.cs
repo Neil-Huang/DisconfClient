@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DisconfClient;
 using DisconfClient.DataConverter;
 using DisconfClientDemo.ConfigClass;
+using log4net;
 
 namespace DisconfClientDemo
 {
@@ -16,58 +17,60 @@ namespace DisconfClientDemo
         {
             try
             {
+                ILog _log = log4net.LogManager.GetLogger("abc");
+                _log.Warn("abc");
                 //请将这个初始化的方法调用放在你应用的入口处
                 ConfigManager.Init();
 
-                //在应用的入口处注册定制化的类型转换器，如果是配置类的方式，则可以直接在Disconf特性中设置，例见：PropertiesDemoConfig
-                DataConverterManager.RegisterDataConverter("TestMyList",new MyListDataConverter());
-                //关于DataConverter
+                ////在应用的入口处注册定制化的类型转换器，如果是配置类的方式，则可以直接在Disconf特性中设置，例见：PropertiesDemoConfig
+                //DataConverterManager.RegisterDataConverter("TestMyList",new MyListDataConverter());
+                ////关于DataConverter
 
 
 
-                //如果你需要当某个节点的值发生变化时获行通知，请在应用的入口处注册配置节点值变更时的回调通知类
-                ConfigCallbackManager.RegisterCallback("TestMyList",new TestMyListCallback());
+                ////如果你需要当某个节点的值发生变化时获行通知，请在应用的入口处注册配置节点值变更时的回调通知类
+                //ConfigCallbackManager.RegisterCallback("TestMyList",new TestMyListCallback());
 
-                //可以将一些配置项归类，定义在一个配置类中
-                TypeTestConfig typeTestConfig = ConfigManager.GetConfigClass<TypeTestConfig>();
+                ////可以将一些配置项归类，定义在一个配置类中
+                //TypeTestConfig typeTestConfig = ConfigManager.GetConfigClass<TypeTestConfig>();
 
-                //也可以直接以Key-Value的形式来调用
-                string testString = ConfigManager.GetConfigValue<string>("TestString");
-                int testInt = ConfigManager.GetConfigValue<int>("TestInt");
-                long testLong = ConfigManager.GetConfigValue<long>("TestLong");
-                uint testUint = ConfigManager.GetConfigValue<uint>("TestUint");
-                ulong testUlong = ConfigManager.GetConfigValue<ulong>("TestUlong");
-                float testFloat = ConfigManager.GetConfigValue<float>("TestFloat");
-                double testDouble = ConfigManager.GetConfigValue<double>("TestDouble");
-                decimal testDecimal = ConfigManager.GetConfigValue<decimal>("TestDecimal");
-                DisconfNodeType testEnumInt = ConfigManager.GetConfigValue<DisconfNodeType>("TestEnumInt");
-                DisconfNodeType testEnumString = ConfigManager.GetConfigValue<DisconfNodeType>("TestEnumString");
-                Guid testGuid = ConfigManager.GetConfigValue<Guid>("TestGuid");
-                Type testType = ConfigManager.GetConfigValue<Type>("TestType");
-                bool testBool = ConfigManager.GetConfigValue<bool>("TestBool");
-                char testChar = ConfigManager.GetConfigValue<char>("TestChar");
-                DateTime testDateTime = ConfigManager.GetConfigValue<DateTime>("TestDateTime");
-                IList<string> testStringList = ConfigManager.GetConfigValue<IList<string>>("TestStringList");
-                IDictionary<string, string> testStringDictionary = ConfigManager.GetConfigValue<IDictionary<string, string>>("TestStringDictionary");
+                ////也可以直接以Key-Value的形式来调用
+                //string testString = ConfigManager.GetConfigValue<string>("TestString");
+                //int testInt = ConfigManager.GetConfigValue<int>("TestInt");
+                //long testLong = ConfigManager.GetConfigValue<long>("TestLong");
+                //uint testUint = ConfigManager.GetConfigValue<uint>("TestUint");
+                //ulong testUlong = ConfigManager.GetConfigValue<ulong>("TestUlong");
+                //float testFloat = ConfigManager.GetConfigValue<float>("TestFloat");
+                //double testDouble = ConfigManager.GetConfigValue<double>("TestDouble");
+                //decimal testDecimal = ConfigManager.GetConfigValue<decimal>("TestDecimal");
+                //DisconfNodeType testEnumInt = ConfigManager.GetConfigValue<DisconfNodeType>("TestEnumInt");
+                //DisconfNodeType testEnumString = ConfigManager.GetConfigValue<DisconfNodeType>("TestEnumString");
+                //Guid testGuid = ConfigManager.GetConfigValue<Guid>("TestGuid");
+                //Type testType = ConfigManager.GetConfigValue<Type>("TestType");
+                //bool testBool = ConfigManager.GetConfigValue<bool>("TestBool");
+                //char testChar = ConfigManager.GetConfigValue<char>("TestChar");
+                //DateTime testDateTime = ConfigManager.GetConfigValue<DateTime>("TestDateTime");
+                //IList<string> testStringList = ConfigManager.GetConfigValue<IList<string>>("TestStringList");
+                //IDictionary<string, string> testStringDictionary = ConfigManager.GetConfigValue<IDictionary<string, string>>("TestStringDictionary");
                 
-                //可以为某一个配置文件定义一个配置类
-                AppSettingsDemoConfig appSettingsDemoConfig = ConfigManager.GetConfigClass<AppSettingsDemoConfig>();
-                //所有的配置项都可以通过这样的方法直接取出配置项中的字符串值
-                string appSettingsValue = ConfigManager.GetConfigValue<string>("redis.config");
+                ////可以为某一个配置文件定义一个配置类
+                //AppSettingsDemoConfig appSettingsDemoConfig = ConfigManager.GetConfigClass<AppSettingsDemoConfig>();
+                ////所有的配置项都可以通过这样的方法直接取出配置项中的字符串值
+                //string appSettingsValue = ConfigManager.GetConfigValue<string>("redis.config");
 
-                //如果配置项的名称是以.config,.properties扩展名结尾的，或注册过DictionaryDataConverter的则可以转换为Dictionary<string, string>类型
-                IDictionary<string, string> appSettingsValueToDictionary = ConfigManager.GetConfigValue<IDictionary<string, string>>("redis.config");
-                //对IDictionary<string, string>类型做了“Get<T>'扩展方法,类型的转换使用的是DefalutDataConverter
-                string host = appSettingsValueToDictionary.Get<string>("Host");
-                int port = appSettingsValueToDictionary.Get<int>("Port");
+                ////如果配置项的名称是以.config,.properties扩展名结尾的，或注册过DictionaryDataConverter的则可以转换为Dictionary<string, string>类型
+                //IDictionary<string, string> appSettingsValueToDictionary = ConfigManager.GetConfigValue<IDictionary<string, string>>("redis.config");
+                ////对IDictionary<string, string>类型做了“Get<T>'扩展方法,类型的转换使用的是DefalutDataConverter
+                //string host = appSettingsValueToDictionary.Get<string>("Host");
+                //int port = appSettingsValueToDictionary.Get<int>("Port");
 
-                //以.json扩展名结尾的，或注册过JsonDataConverter的则可以转换为指定的类型
-                JsonDemoConfig jsonDemoConfig = ConfigManager.GetConfigClass<JsonDemoConfig>();
-                string json = ConfigManager.GetConfigValue<string>("redis.json");
-                JsonDemoConfig jsonDemoConfig2 = ConfigManager.GetConfigValue<JsonDemoConfig>("redis.json");
+                ////以.json扩展名结尾的，或注册过JsonDataConverter的则可以转换为指定的类型
+                //JsonDemoConfig jsonDemoConfig = ConfigManager.GetConfigClass<JsonDemoConfig>();
+                //string json = ConfigManager.GetConfigValue<string>("redis.json");
+                //JsonDemoConfig jsonDemoConfig2 = ConfigManager.GetConfigValue<JsonDemoConfig>("redis.json");
 
                 //以.properties扩展名结尾的，或注册过PropertiesDataConverter的则可以进行类型转换
-                PropertiesDemoConfig propertiesDemoConfig = ConfigManager.GetConfigClass<PropertiesDemoConfig>();
+                //PropertiesDemoConfig propertiesDemoConfig = ConfigManager.GetConfigClass<PropertiesDemoConfig>();
                 string properties = ConfigManager.GetConfigValue<string>("redis.properties");
                 PropertiesDemoConfig propertiesDemoConfig2 = ConfigManager.GetConfigValue<PropertiesDemoConfig>("redis.properties");
 

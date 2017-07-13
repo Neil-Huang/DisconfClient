@@ -80,6 +80,11 @@ namespace DisconfClient
         private static void StartFileSystemWatcher()
         {
             string path = Path.Combine(DisconfClientSettings.DisconfClientLocalConfigPath, DisconfClientSettings.AppId, DisconfClientSettings.Environment);
+            if (!System.IO.Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             Fsw.Path = path;
             Fsw.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.Size;   //设置文件的文件名、目录名及文件的大小改动会触发Changed事件  
             Fsw.Changed += new FileSystemEventHandler(FileSystemWatcherChanged);
@@ -368,9 +373,11 @@ namespace DisconfClient
         /// </summary>
         private static void LoadConfigItemsFromServer()
         {
-            IList<ConfigMetadataApiResult> list = _disconfWebApi.GetConfigMetadatas();
-            if (list == null || list.Count <= 0)
-                throw new Exception(string.Format("配置中心没有为应用：{0}配置过任何配置项！", DisconfClientSettings.AppId));
+            IList<ConfigMetadataApiResult> list = new List<ConfigMetadataApiResult>() { new ConfigMetadataApiResult() { Name= "redis.properties", UpdateTime= "201410111542", Type= DisconfNodeType.File  } };
+
+            //IList<ConfigMetadataApiResult> list = _disconfWebApi.GetConfigMetadatas();
+            //if (list == null || list.Count <= 0)
+            //    throw new Exception(string.Format("配置中心没有为应用：{0}配置过任何配置项！", DisconfClientSettings.AppId));
 
             //获取所有文件类型的配置信息
             IList<Task> tasks = new List<Task>();
@@ -388,39 +395,39 @@ namespace DisconfClient
                 tasks.Add(task);
             }
             //获取所有配置项类型的配置信息
-            Task task1 = Task.Factory.StartNew(() =>
-            {
-                IList<ConfigItemContentApiResult> items = _disconfWebApi.GetAllConfigItemContent();
-                if (items != null)
-                {
-                    foreach (ConfigItemContentApiResult item in items)
-                    {
-                        if (item == null)
-                            continue;
-                        ConfigStorageItem configStorageItem = null;
-                        if (ConfigStorage.ContainsKey(item.Name))
-                        {
-                            configStorageItem = ConfigStorage[item.Name];
-                        }
-                        if (configStorageItem == null)
-                        {
-                            string name = item.Name;
-                            ConfigMetadataApiResult apiResult = list.FirstOrDefault(m => m.Name == name);
-                            string version = null;
-                            if (apiResult != null)
-                                version = apiResult.UpdateTime;
-                            configStorageItem = CreateConfigStorageItem(item.Name, DisconfNodeType.Item, version, item.Value);
-                        }
-                        else
-                        {
-                            configStorageItem.Data = item.Value;
-                        }
+            //Task task1 = Task.Factory.StartNew(() =>
+            //{
+            //    IList<ConfigItemContentApiResult> items = _disconfWebApi.GetAllConfigItemContent();
+            //    if (items != null)
+            //    {
+            //        foreach (ConfigItemContentApiResult item in items)
+            //        {
+            //            if (item == null)
+            //                continue;
+            //            ConfigStorageItem configStorageItem = null;
+            //            if (ConfigStorage.ContainsKey(item.Name))
+            //            {
+            //                configStorageItem = ConfigStorage[item.Name];
+            //            }
+            //            if (configStorageItem == null)
+            //            {
+            //                string name = item.Name;
+            //                ConfigMetadataApiResult apiResult = list.FirstOrDefault(m => m.Name == name);
+            //                string version = null;
+            //                if (apiResult != null)
+            //                    version = apiResult.UpdateTime;
+            //                configStorageItem = CreateConfigStorageItem(item.Name, DisconfNodeType.Item, version, item.Value);
+            //            }
+            //            else
+            //            {
+            //                configStorageItem.Data = item.Value;
+            //            }
 
-                        ConfigStorage[configStorageItem.Name] = configStorageItem;
-                    }
-                }
-            });
-            tasks.Add(task1);
+            //            ConfigStorage[configStorageItem.Name] = configStorageItem;
+            //        }
+            //    }
+            //});
+            //tasks.Add(task1);
             Task.WaitAll(tasks.ToArray());
             SaveLocalConfig();
             _disconfServerIsActive = true;
@@ -554,6 +561,7 @@ namespace DisconfClient
                 return;
 
             string path = GetLocalConfigPath();
+            
             try
             {
                 string json = JsonConvert.SerializeObject(ConfigStorage.Values.ToList(), Formatting.Indented);
@@ -665,8 +673,12 @@ namespace DisconfClient
         /// <returns></returns>
         private static string GetLocalConfigPath()
         {
-            return Path.Combine(DisconfClientSettings.DisconfClientLocalConfigPath, DisconfClientSettings.AppId, DisconfClientSettings.Environment,
-                DisconfClientSettings.Version + ".config");
+            string localPath = Path.Combine(DisconfClientSettings.DisconfClientLocalConfigPath, DisconfClientSettings.AppId, DisconfClientSettings.Environment);
+            if (!Directory.Exists(localPath))
+            {
+                Directory.CreateDirectory(localPath);
+            }
+            return Path.Combine(localPath, DisconfClientSettings.Version + ".config");
         }
 
         /// <summary>

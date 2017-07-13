@@ -19,7 +19,8 @@ namespace DisconfClient
 
         public static T GetConfigClass<T>()
         {
-            return (T)ConfigClassMapper.GetConfigClassInstance(typeof(T));
+            var t = (T)ConfigClassMapper.GetConfigClassInstance(typeof(T));
+            return t;
         }
 
         public static T GetConfigValue<T>(string key, T defalut = default(T))

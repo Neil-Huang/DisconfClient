@@ -53,6 +53,7 @@ namespace DisconfClient
         private void Connect()
         {
             string host = _webApi.GetZooKeeperHost();
+            host = "172.16.1.25:2181";
             _zooKeeper = new ZooKeeper(host, new TimeSpan(0, 0, 0, DisconfClientSettings.ZooKeeperSessionTimeout), this);
             LogManager.GetLogger().Info(string.Format("DisconfClient.ConnectionWatcher.Connect,host:{0},connected.", host));
         }
